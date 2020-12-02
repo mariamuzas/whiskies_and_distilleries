@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class WhiskyController {
 
     @GetMapping(value="/whiskies")
     public ResponseEntity<List<Whisky>> getAllWhiskies(@RequestParam (name = "age", required = false) Integer age,
-                                                       @RequestParam(name= "distillery", required = false)String distillery, @RequestParam(name="year", required = false) Integer year){
+                                                       @RequestParam(name= "distillery", required = false)String distillery, @RequestParam(name="year", required = false) Integer year, @RequestParam(name="region", required = false) String region){
         if(age != null && distillery != null){
             Distillery foundDistillery = distilleryRepository.findByName(distillery);
             return new ResponseEntity<>(whiskyRepository.findByAgeAndDistillery(age, foundDistillery),
@@ -38,6 +39,15 @@ public class WhiskyController {
         }
         else if (year != null){
             return new ResponseEntity<>(whiskyRepository.findByYear(year), HttpStatus.OK);
+        }
+        else if (region != null){
+//            List<Whisky> whiskiesInRegion = new ArrayList<>();
+//            List<Distillery> foundDistilleries = distilleryRepository.findByRegion(region);
+//            for ( Distillery foundDistillery : foundDistilleries) {
+//                whiskiesInRegion.addAll(whiskyRepository.findByDistillery(foundDistillery)) ;
+//            }
+//            return new ResponseEntity<>(whiskiesInRegion, HttpStatus.OK);
+            return new ResponseEntity<>(whiskyRepository.findByDistilleryRegion(region), HttpStatus.OK);
         }
         return new ResponseEntity<>(whiskyRepository.findAll(), HttpStatus.OK);
     }
